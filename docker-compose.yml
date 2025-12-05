@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    # Cargamos variables SOLO desde el archivo .env para evitar conflictos
+    # con variables de entorno vacías en la terminal.
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/app:/app/app
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend
+    restart: always
